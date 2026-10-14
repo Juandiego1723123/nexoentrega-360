@@ -1,0 +1,147 @@
+{
+  "id": "SPEC-5",
+  "version": "v1.0",
+  "name": "Asistente de IA",
+  "story": {
+    "id": "HU-05",
+    "as": "coordinador",
+    "want": "un resumen asistido por IA de hasta 20 solicitudes ENVIADA",
+    "soThat": "priorizar mi revisión sabiendo que es un borrador que yo apruebo"
+  },
+  "requirements": [
+    "RF10",
+    "RF11",
+    "RF12",
+    "RNF06"
+  ],
+  "review": {
+    "author": "Juan Diego Edna",
+    "reviewer": "Andrés David López Muñoz",
+    "dateAndCommit": "pendiente"
+  },
+  "description": "El coordinador pide un resumen de hasta 20 solicitudes ENVIADA de su organización. La IA devuelve un borrador marcado como asistencia de IA que solo el coordinador puede aprobar. Si la IA falla, el sistema entrega un resumen determinista y sigue funcionando.",
+  "inputs": [
+    {
+      "field": "POST /ai/summaries · requestIds",
+      "type": "lista de códigos",
+      "validation": [
+        "1 a 20, sin duplicados, todas ENVIADA y de la organización del coordinador"
+      ]
+    },
+    {
+      "field": "POST /ai/summaries/{id}/approve · id",
+      "type": "entero",
+      "validation": [
+        "borrador existente de la misma organización y aún no aprobado"
+      ]
+    }
+  ],
+  "process": [
+    "Verificar que el usuario es coordinador; si no, 403.",
+    "Validar requestIds; si falla, 422 SIN invocar el adaptador (mismo mensaje para un ID ajeno o inexistente).",
+    "Construir el envío mínimo: requestId, zona, prioridad, fechaRequerida, estado y observaciones.",
+    "Llamar al adaptador con un límite de 5 segundos.",
+    "Validar la salida con el esquema del anexo (Ajv, draft 2020-12) y con reglas semánticas: IDs del conjunto enviado, sin duplicados, sin contenido activo.",
+    "Si la salida es inválida, hay timeout o falla el proveedor: aviso controlado y resumen determinista (prioridad ALTA primero, luego fecha requerida).",
+    "Guardar el borrador con origen (IA o DETERMINISTA), motivo del fallo y la etiqueta «Asistencia de IA».",
+    "Al aprobar: APROBADO y un evento APROBAR_RESUMEN. No se reserva, despacha ni cambia prioridad alguna."
+  ],
+  "outputs": [
+    {
+      "condition": "resumen",
+      "result": "201 con id, etiqueta, estado BORRADOR, origen, summary (≤ 600), recommendations (≤ 5) y aviso si hubo degradación"
+    },
+    {
+      "condition": "aprobación",
+      "result": "200 con estado APROBADO"
+    },
+    {
+      "condition": "validación",
+      "result": "422 en requestIds"
+    },
+    {
+      "condition": "rol distinto",
+      "result": "403"
+    }
+  ],
+  "businessRules": [
+    "El texto de la IA es contenido no confiable: se muestra como texto plano y nunca se ejecuta.",
+    "La prioridad viene de la solicitud, no del modelo; la recomendación no es una decisión.",
+    "CI y la demostración no dependen de un servicio de pago (proveedores: none, fixture, ollama).",
+    "Sin reintento automático tras un fallo (supuesto 5)."
+  ],
+  "edgeCases": [
+    "1 y 20 solicitudes; 21 y lista vacía.",
+    "ID repetido, ajeno o RESERVADA.",
+    "summary de 600 y 601 caracteres; 6 recomendaciones.",
+    "Proveedor que tarda más de 5 s o falla."
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-RF10-01",
+      "given": "A-001, A-002 y una tercera ENVIADA",
+      "when": "el coordinador pide el resumen con un adaptador espía",
+      "then": "recibe 201 BORRADOR «Asistencia de IA» con origen IA; el adaptador recibió solo los 6 campos permitidos y ningún nombre, correo, hash ni dato de ORG-B"
+    },
+    {
+      "id": "AC-RF10-02",
+      "given": "21 solicitudes ENVIADA",
+      "when": "se piden resúmenes con 20, 21, 0 e IDs repetidos",
+      "then": "20 → 201; los demás → 422 y el adaptador se invocó una sola vez"
+    },
+    {
+      "id": "AC-RF10-03",
+      "given": "B-001 de ORG-B",
+      "when": "el coordinador de ORG-A lo incluye",
+      "then": "422 con el mismo mensaje que un ID inexistente y el adaptador no se invoca"
+    },
+    {
+      "id": "AC-RF10-04",
+      "given": "A-001 RESERVADA",
+      "when": "se incluye en el resumen",
+      "then": "422 en requestIds"
+    },
+    {
+      "id": "AC-RF10-05",
+      "given": "un resumen de ORG-A",
+      "when": "solicitante, bodega y auditor lo piden o aprueban; el coordinador de ORG-B lo aprueba",
+      "then": "403 para los tres roles y 404 para ORG-B"
+    },
+    {
+      "id": "AC-RF11-01",
+      "given": "los fixtures del anexo",
+      "when": "el coordinador pide un resumen de A-001 y A-002 con cada uno",
+      "then": "solo AI-VALID queda con origen IA; JSON-BAD, FOREIGN-ID, EXTRA, ERROR e INJECTION entregan el determinista, sin B-001 y sin cambiar inventario ni solicitudes; el motivo queda registrado"
+    },
+    {
+      "id": "AC-RF11-02",
+      "given": "salidas simuladas",
+      "when": "la IA devuelve summary de 600 y 601, una propiedad adicional o 6 recomendaciones",
+      "then": "600 es válido; los demás se descartan"
+    },
+    {
+      "id": "AC-RF11-03",
+      "given": "una salida con <script>",
+      "when": "se valida",
+      "then": "se descarta con motivo CONTENIDO_ACTIVO y el texto nunca llega a la interfaz"
+    },
+    {
+      "id": "AC-RF12-01",
+      "given": "el fixture AI-TIMEOUT (5.001 ms)",
+      "when": "se pide el resumen y mientras tanto se lista",
+      "then": "el listado responde durante la espera; a los ≈ 5 s llega 201 DETERMINISTA con motivo TIMEOUT y A-001 (ALTA) primero"
+    },
+    {
+      "id": "AC-RF12-02",
+      "given": "un borrador con origen IA",
+      "when": "el coordinador lo aprueba",
+      "then": "APROBADO, exactamente 1 evento APROBAR_RESUMEN, solicitudes e inventario idénticos; aprobar otra vez → 409"
+    },
+    {
+      "id": "AC-RNF06-01",
+      "given": "sin proveedor configurado",
+      "when": "se pide un resumen y se consultan /health y /ready",
+      "then": "origen DETERMINISTA con aviso «sin proveedor»; health y ready responden por separado"
+    }
+  ]
+}

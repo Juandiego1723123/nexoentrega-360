@@ -1,0 +1,169 @@
+{
+  "id": "SPEC-2",
+  "version": "v1.0",
+  "name": "Solicitudes",
+  "story": {
+    "id": "HU-02",
+    "as": "solicitante",
+    "want": "crear, editar y enviar solicitudes de kits válidas",
+    "soThat": "que el coordinador pueda evaluarlas"
+  },
+  "requirements": [
+    "RF03",
+    "RF04"
+  ],
+  "review": {
+    "author": "Juan Diego Edna",
+    "reviewer": "Andrés David López Muñoz",
+    "dateAndCommit": "pendiente"
+  },
+  "description": "Creación, edición y envío de solicitudes de kits y control del ciclo de estados de la solicitud.",
+  "inputs": [
+    {
+      "field": "zona",
+      "type": "enum",
+      "validation": [
+        "NORTE, SUR, CENTRO, ORIENTE u OCCIDENTE (supuesto 1)"
+      ]
+    },
+    {
+      "field": "prioridad",
+      "type": "enum",
+      "validation": [
+        "NORMAL o ALTA"
+      ]
+    },
+    {
+      "field": "fechaRequerida",
+      "type": "fecha ISO 8601",
+      "validation": [
+        "al enviar, no anterior al momento del envío"
+      ]
+    },
+    {
+      "field": "observaciones",
+      "type": "texto opcional",
+      "validation": [
+        "máximo 500 caracteres (supuesto 3)"
+      ]
+    },
+    {
+      "field": "lineas",
+      "type": "lista",
+      "validation": [
+        "1 a 10 líneas",
+        "sin SKU repetidos"
+      ]
+    },
+    {
+      "field": "lineas[].sku",
+      "type": "texto",
+      "validation": [
+        "SKU activo de la organización del usuario"
+      ]
+    },
+    {
+      "field": "lineas[].cantidad",
+      "type": "entero",
+      "validation": [
+        "1 a 500",
+        "sin negativos ni decimales"
+      ]
+    }
+  ],
+  "process": [
+    "Crear (POST /requests): validar, generar un código único por organización (A-003…), tomar solicitante y organización de la sesión y guardar en BORRADOR.",
+    "Editar (PUT /requests/{id}): solo el solicitante dueño y solo en BORRADOR; en otro estado 409 sin cambios.",
+    "Enviar (POST /requests/{id}/submit): opcionalmente recibe el contenido final; revalida todo (incluida la fecha contra el momento del envío), pasa a ENVIADA y registra el evento ENVIAR. No reserva inventario.",
+    "Cancelar (POST /requests/{id}/cancel): solo el solicitante dueño, desde ENVIADA o RESERVADA; si estaba RESERVADA libera la reserva (SPEC-3).",
+    "Entregar (POST /requests/{id}/deliver): solo el coordinador, de DESPACHADA a ENTREGADA; no altera inventario.",
+    "Cualquier transición no definida responde 409 y conserva datos e inventario."
+  ],
+  "outputs": [
+    {
+      "condition": "crear",
+      "result": "201 con la solicitud en BORRADOR"
+    },
+    {
+      "condition": "editar o transición válida",
+      "result": "200 con la solicitud"
+    },
+    {
+      "condition": "validación",
+      "result": "422 con el campo exacto (por ejemplo lineas[0].cantidad)"
+    },
+    {
+      "condition": "transición inválida",
+      "result": "409 sin cambios"
+    }
+  ],
+  "businessRules": [
+    "Solo el borrador es editable.",
+    "Enviar no reserva stock.",
+    "Un solicitante no opera solicitudes de otro solicitante (403, supuesto 8).",
+    "Cada transición exitosa escribe un evento de auditoría en la misma transacción."
+  ],
+  "edgeCases": [
+    "Cantidades 0, 1, 500, 501, 2.5 y −1.",
+    "0, 1, 10 y 11 líneas.",
+    "SKU repetido o inactivo.",
+    "Fecha igual o anterior al momento del envío.",
+    "Observaciones de 500 y 501 caracteres."
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-RF03-01",
+      "given": "un borrador propio de ORG-A con SKU activo",
+      "when": "el solicitante lo envía con cantidad 0",
+      "then": "recibe 422 en lineas[0].cantidad; el borrador conserva estado y líneas; inventario y auditoría no cambian"
+    },
+    {
+      "id": "AC-RF03-02",
+      "given": "un solicitante de ORG-A",
+      "when": "crea borradores con cantidades 1, 500, 501, −1, 2.5 y 0",
+      "then": "1 y 500 responden 201; las demás 422 en la cantidad"
+    },
+    {
+      "id": "AC-RF03-03",
+      "given": "un solicitante de ORG-A",
+      "when": "envía un SKU repetido, 0 líneas, 11 líneas o un SKU inactivo",
+      "then": "recibe 422 en el campo correspondiente; 10 líneas no violan la regla de cantidad de líneas"
+    },
+    {
+      "id": "AC-RF03-04",
+      "given": "un borrador con fecha requerida anterior a ahora",
+      "when": "se intenta enviar",
+      "then": "recibe 422 en fechaRequerida y sigue en BORRADOR; observaciones de 501 caracteres → 422 y de 500 → 201"
+    },
+    {
+      "id": "AC-RF03-05",
+      "given": "el seed (A-001 y A-002 existen)",
+      "when": "el solicitante crea dos borradores válidos",
+      "then": "recibe 201, estado BORRADOR y códigos A-003 y A-004; un coordinador recibe 403; ORG-B numera B-002"
+    },
+    {
+      "id": "AC-RF04-01",
+      "given": "A-001 ENVIADA",
+      "when": "el dueño intenta editarla",
+      "then": "recibe 409 y las líneas no cambian; un borrador sí se edita (200)"
+    },
+    {
+      "id": "AC-RF04-02",
+      "given": "A-001 ENVIADA",
+      "when": "el coordinador registra la entrega",
+      "then": "recibe 409 y el estado no cambia"
+    },
+    {
+      "id": "AC-RF04-03",
+      "given": "A-001 del solicitante 1",
+      "when": "el solicitante 2 de ORG-A intenta cancelarla o verla",
+      "then": "recibe 403 y nada cambia"
+    },
+    {
+      "id": "AC-RF04-04",
+      "given": "un borrador nuevo de 4 KIT-AGUA",
+      "when": "se recorre BORRADOR → ENVIADA → RESERVADA → DESPACHADA → ENTREGADA",
+      "then": "existen exactamente 4 eventos (ENVIAR, RESERVAR, DESPACHAR, ENTREGAR), el físico queda en 16 y ENTREGADA no se puede cancelar"
+    }
+  ]
+}

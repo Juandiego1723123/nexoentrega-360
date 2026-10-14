@@ -1,0 +1,167 @@
+{
+  "id": "SPEC-3",
+  "version": "v1.0",
+  "name": "Inventario y transiciones",
+  "story": {
+    "id": "HU-03",
+    "as": "coordinador o bodega",
+    "want": "reservar, despachar y cancelar solicitudes con un inventario consistente",
+    "soThat": "no prometer el mismo kit a dos solicitantes"
+  },
+  "requirements": [
+    "RF05",
+    "RF06",
+    "RF07",
+    "RNF02"
+  ],
+  "review": {
+    "author": "Juan Diego Edna",
+    "reviewer": "Andrés David López Muñoz",
+    "dateAndCommit": "pendiente"
+  },
+  "description": "Reserva atómica e idempotente de existencias, despacho y cancelación con inventario siempre consistente, incluso con peticiones simultáneas.",
+  "inputs": [
+    {
+      "field": "POST /requests/{id}/reserve · Idempotency-Key",
+      "type": "encabezado UUID",
+      "validation": [
+        "obligatorio",
+        "se procesa después de autenticar y autorizar"
+      ]
+    },
+    {
+      "field": "POST /requests/{id}/dispatch",
+      "type": "—",
+      "validation": [
+        "la solicitud debe estar RESERVADA"
+      ]
+    },
+    {
+      "field": "GET /inventory · page, pageSize",
+      "type": "entero",
+      "validation": [
+        "mismas reglas de paginación de SPEC-4"
+      ]
+    }
+  ],
+  "process": [
+    "Cargar la solicitud de la organización del usuario (404 si no existe o es ajena) y verificar rol coordinador (403).",
+    "Validar Idempotency-Key (422 si falta o no es UUID).",
+    "En una transacción, insertar la clave (clave, usuario, operación, hash del contenido) con ON CONFLICT DO NOTHING. Si ya existía: mismo hash → repetir la respuesta guardada; hash distinto → 409.",
+    "Bloquear la solicitud (SELECT … FOR UPDATE); si no está ENVIADA, guardar y devolver 409.",
+    "Bloquear las filas de inventario de sus SKU en orden de producto y comprobar que disponible = físico − reservado alcanza para TODAS las líneas; si no, guardar y devolver 409 sin modificar nada.",
+    "Sumar las reservas, pasar a RESERVADA, registrar el evento y guardar el resultado 200 de idempotencia; confirmar."
+  ],
+  "outputs": [
+    {
+      "condition": "reserva exitosa",
+      "result": "200 con la solicitud y el inventario resultante"
+    },
+    {
+      "condition": "repetición con la misma clave y contenido",
+      "result": "la misma respuesta y encabezado Idempotent-Replayed"
+    },
+    {
+      "condition": "misma clave con otro contenido",
+      "result": "409 IDEMPOTENCIA_CONFLICTO"
+    },
+    {
+      "condition": "stock insuficiente o estado inválido",
+      "result": "409 sin cambios"
+    }
+  ],
+  "businessRules": [
+    "Despachar (bodega, desde RESERVADA): resta la cantidad del físico y de la reserva.",
+    "Cancelar una RESERVADA resta exactamente su reserva; el físico no cambia.",
+    "Cancelar una ENVIADA o registrar ENTREGADA no altera inventario.",
+    "La base impone on_hand ≥ 0, reserved ≥ 0 y reserved ≤ on_hand (CHECK).",
+    "Un error antes del commit no deja reserva parcial.",
+    "La idempotencia guarda 200 y 409 de negocio al menos 24 h; 401, 403, 404, 422 y 5xx no se guardan (supuesto 7).",
+    "Una clave no recupera la respuesta de otro usuario (la clave primaria incluye el usuario)."
+  ],
+  "edgeCases": [
+    "Dos reservas simultáneas que compiten por existencias insuficientes.",
+    "La misma clave enviada dos veces en simultáneo.",
+    "Una línea suficiente y otra insuficiente."
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-RF05-01",
+      "given": "A-001 ENVIADA con 7 KIT-ALIMENTO y físico 10, reservado 0",
+      "when": "el coordinador la reserva",
+      "then": "recibe 200; físico 10, reservado 7, disponible 3; RESERVADA y 1 evento (oráculo del anexo)"
+    },
+    {
+      "id": "AC-RF05-02",
+      "given": "una solicitud ENVIADA con 2 KIT-ALIMENTO y 9 KIT-HIGIENE (físico 8)",
+      "when": "el coordinador la reserva",
+      "then": "recibe 409 STOCK_INSUFICIENTE; ninguna línea ni el estado cambian"
+    },
+    {
+      "id": "AC-RF05-03",
+      "given": "una solicitud en BORRADOR",
+      "when": "el coordinador intenta reservarla",
+      "then": "recibe 409 y el inventario no cambia"
+    },
+    {
+      "id": "AC-RF06-01",
+      "given": "A-001 RESERVADA",
+      "when": "el dueño la cancela",
+      "then": "físico 10, reservado 0, disponible 10; cancelar A-002 ENVIADA no altera inventario"
+    },
+    {
+      "id": "AC-RF06-02",
+      "given": "A-001 RESERVADA",
+      "when": "la bodega la despacha",
+      "then": "físico 3, reservado 0, disponible 3; despachar una ENVIADA → 409"
+    },
+    {
+      "id": "AC-RF06-03",
+      "given": "A-001 DESPACHADA",
+      "when": "el coordinador registra la entrega",
+      "then": "ninguna cantidad de inventario cambia"
+    },
+    {
+      "id": "AC-RF07-01",
+      "given": "una reserva exitosa con la clave K",
+      "when": "se repite con K y el mismo contenido",
+      "then": "la respuesta es idéntica, marcada Idempotent-Replayed; una sola reserva y un solo evento"
+    },
+    {
+      "id": "AC-RF07-02",
+      "given": "la clave K usada en A-001",
+      "when": "se usa K para A-002 o con otro cuerpo",
+      "then": "recibe 409 IDEMPOTENCIA_CONFLICTO y A-002 sigue ENVIADA"
+    },
+    {
+      "id": "AC-RF07-03",
+      "given": "A-001 y A-002 piden 7 cada una con disponible 10",
+      "when": "se reservan en simultáneo (5 rondas, seed limpio)",
+      "then": "exactamente una 200 y una 409; físico 10, reservado 7, disponible 3; un solo evento"
+    },
+    {
+      "id": "AC-RF07-03b",
+      "given": "la misma clave K",
+      "when": "se envía dos veces en simultáneo para A-001",
+      "then": "ambas responden 200 con un solo efecto y un solo evento"
+    },
+    {
+      "id": "AC-RF07-04",
+      "given": "A-001 ya RESERVADA",
+      "when": "se reserva otra vez con otra clave",
+      "then": "recibe 409 TRANSICION_INVALIDA porque ya no está ENVIADA"
+    },
+    {
+      "id": "AC-RF07-05",
+      "given": "el contrato de idempotencia",
+      "when": "se reserva sin clave, con rol bodega (403) y sobre B-001 (404)",
+      "then": "sin clave → 422; 403 y 404 no se guardan; la misma clave de otro usuario es una operación independiente; el TTL es de al menos 24 h"
+    },
+    {
+      "id": "AC-RNF02-01",
+      "given": "la base real",
+      "when": "se intenta dejar existencias o reservas negativas o reservado > físico",
+      "then": "las restricciones CHECK lo rechazan y ningún mínimo queda negativo"
+    }
+  ]
+}

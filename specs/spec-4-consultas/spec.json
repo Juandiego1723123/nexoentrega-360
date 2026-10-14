@@ -1,0 +1,184 @@
+{
+  "id": "SPEC-4",
+  "version": "v1.0",
+  "name": "Consultas y auditoría",
+  "story": {
+    "id": "HU-04",
+    "as": "coordinador o auditor",
+    "want": "consultar las solicitudes de mi organización con filtros y ver su historial de auditoría",
+    "soThat": "supervisar la operación sin modificar datos"
+  },
+  "requirements": [
+    "RF08",
+    "RF09",
+    "RNF01",
+    "RNF03"
+  ],
+  "review": {
+    "author": "Juan Diego Edna",
+    "reviewer": "Andrés David López Muñoz",
+    "dateAndCommit": "pendiente"
+  },
+  "description": "Listados paginados y filtrados, tablero con cantidades por estado e historial de auditoría inmutable de cada transición exitosa y cada aprobación de resumen de IA.",
+  "inputs": [
+    {
+      "field": "GET /requests · page",
+      "type": "entero",
+      "validation": [
+        "≥ 1",
+        "por defecto 1"
+      ]
+    },
+    {
+      "field": "GET /requests · pageSize",
+      "type": "entero",
+      "validation": [
+        "1 a 100",
+        "por defecto 20"
+      ]
+    },
+    {
+      "field": "GET /requests · estado",
+      "type": "enum",
+      "validation": [
+        "BORRADOR, ENVIADA, RESERVADA, DESPACHADA, ENTREGADA o CANCELADA"
+      ]
+    },
+    {
+      "field": "GET /requests · prioridad",
+      "type": "enum",
+      "validation": [
+        "NORMAL o ALTA"
+      ]
+    },
+    {
+      "field": "GET /requests · zona",
+      "type": "enum",
+      "validation": [
+        "lista de zonas",
+        "desconocida → 422"
+      ]
+    },
+    {
+      "field": "GET /audit · page, pageSize",
+      "type": "entero",
+      "validation": [
+        "mismas reglas"
+      ]
+    },
+    {
+      "field": "GET /audit · desde, hasta",
+      "type": "fecha ISO 8601 UTC",
+      "validation": [
+        "desde ≤ hasta"
+      ]
+    }
+  ],
+  "process": [
+    "Autenticar; rol y organización salen de la sesión.",
+    "Validar parámetros; si alguno es inválido, 422 con el campo.",
+    "Filtrar por la organización; si es solicitante, además por su identificador.",
+    "Aplicar filtros, ordenar por fecha de creación descendente y paginar.",
+    "El tablero cuenta las solicitudes por estado (0 si no hay).",
+    "Cada transición exitosa y cada aprobación de resumen escribe un evento en la misma transacción."
+  ],
+  "outputs": [
+    {
+      "condition": "listado",
+      "result": "items, page, pageSize y total"
+    },
+    {
+      "condition": "tablero",
+      "result": "conteo por cada uno de los 6 estados"
+    },
+    {
+      "condition": "evento",
+      "result": "id, actorId, organizacionId, recurso, recursoId, accion, fechaUtc y correlationId"
+    },
+    {
+      "condition": "PUT, PATCH o DELETE /audit/{id}",
+      "result": "405"
+    }
+  ],
+  "businessRules": [
+    "El historial no se edita ni se borra: no hay operaciones de escritura y un trigger rechaza UPDATE y DELETE en la base.",
+    "Una operación rechazada puede dejar un log técnico, pero nunca un evento de transición.",
+    "Si falla la escritura del evento, se revierte toda la transacción.",
+    "Solo el auditor consulta /audit; el solicitante no consulta inventario."
+  ],
+  "edgeCases": [
+    "pageSize 0, 100 y 101.",
+    "Página mayor al total (lista vacía con total).",
+    "Filtros sin resultados.",
+    "Zona desconocida (422).",
+    "desde > hasta (422)."
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-RF08-01",
+      "given": "150 solicitudes de ORG-A y 30 de ORG-B",
+      "when": "el coordinador de ORG-A pide pageSize 100",
+      "then": "recibe 200, 100 elementos y total 150, todos de ORG-A; la página 2 trae 50 y la 9 viene vacía"
+    },
+    {
+      "id": "AC-RF08-02",
+      "given": "el coordinador de ORG-A",
+      "when": "pide pageSize 101, 0 o texto, o filtra por zona o estado desconocidos",
+      "then": "recibe 422 asociado al campo; pageSize 100 es válido"
+    },
+    {
+      "id": "AC-RF08-03",
+      "given": "el solicitante 2 creó un borrador",
+      "when": "el solicitante 1 lista, abre ese borrador y consulta el tablero",
+      "then": "solo ve A-001 y A-002, recibe 403 en el detalle ajeno y su tablero no cuenta el borrador; inventario → 403"
+    },
+    {
+      "id": "AC-RF08-04",
+      "given": "el seed",
+      "when": "el coordinador filtra y pide B-001; la bodega lista e inventaría",
+      "then": "filtros por prioridad, zona y estado devuelven lo esperado; B-001 → 404; la bodega ve su organización"
+    },
+    {
+      "id": "AC-RF08-05",
+      "given": "25 solicitudes extra y una reserva en ORG-A",
+      "when": "el coordinador consulta /dashboard",
+      "then": "los conteos coinciden con una consulta directa a la base"
+    },
+    {
+      "id": "AC-RF09-01",
+      "given": "una petición con X-Correlation-Id conocido",
+      "when": "el coordinador reserva A-001",
+      "then": "existe exactamente 1 evento con actor, organización, recurso, acción RESERVAR, fecha UTC y ese correlationId"
+    },
+    {
+      "id": "AC-RF09-02",
+      "given": "A-001 ENVIADA",
+      "when": "la bodega intenta despacharla",
+      "then": "recibe 409 y el número de eventos no cambia"
+    },
+    {
+      "id": "AC-RF09-03",
+      "given": "un evento de auditoría",
+      "when": "el auditor hace PUT, PATCH o DELETE y se intenta UPDATE/DELETE directo en la base",
+      "then": "la API responde 405, la base lo rechaza y el evento queda igual; el coordinador recibe 403 en /audit"
+    },
+    {
+      "id": "AC-RF09-04",
+      "given": "un trigger de prueba que hace fallar la inserción del evento",
+      "when": "el coordinador reserva A-001",
+      "then": "recibe 500 sin detalles internos; estado, inventario e idempotencia quedan como antes"
+    },
+    {
+      "id": "AC-RF09-05",
+      "given": "un evento de hoy",
+      "when": "el auditor filtra por rango",
+      "then": "el rango que lo contiene devuelve 1, uno futuro 0 y desde > hasta → 422 en desde"
+    },
+    {
+      "id": "AC-RNF03-01",
+      "given": "2.000 solicitudes sembradas",
+      "when": "20 usuarios virtuales consultan listados y tablero 60 s después de 5 s de calentamiento",
+      "then": "p95 ≤ 700 ms y errores < 1 %, medido con k6"
+    }
+  ]
+}
