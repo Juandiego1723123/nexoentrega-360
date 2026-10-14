@@ -29,5 +29,15 @@ Los valores esperados vienen del anexo `acceptance-oracles.md` (por ejemplo, res
 | D-01 | La prueba de rutas sin sesión enviaba cuerpo en peticiones GET | `tests/integration/spec1-identidad.test.js` | Cuerpo solo en métodos que lo admiten | AC-RNF01-01 |
 | D-02 | La prueba de teclado presionaba Tab antes de que el formulario cargara | `tests/e2e/flujo-principal.spec.js` | Esperar el campo Correo visible antes de Tab | E2E-03 |
 | D-03 | En 390 px la celda incluye su etiqueta visual en el nombre accesible y la prueba buscaba el texto exacto | `tests/e2e/flujo-principal.spec.js` | Localizar por columna (`data-label`) | E2E-01 |
+| D-04 | El Dockerfile usaba `npm ci --omit=optional` y excluía `@rollup/rollup-linux-x64-gnu`; `vite build` fallaba dentro de la imagen | `Dockerfile` | `npm ci --ignore-scripts` sin omitir opcionales | `docker compose up -d --build` (62 s hasta ready) |
 
 Ningún defecto se resolvió relajando una aserción.
+
+## Verificación manual (14-oct-2026, Juan Diego Edna, Windows + Docker Desktop)
+
+| Verificación | Resultado |
+|---|---|
+| Arranque desde clon limpio con Docker | 62 s hasta `/api/ready` = 200 |
+| Ataques entre organizaciones en el navegador (Coordinador ORG-A) | Leer B-001 → 404; reservar B-001 → 404; auditoría → 403; reserva sin clave → 422 |
+| Teclado e indicación de errores | Foco visible al navegar con Tab; mensaje de credenciales incorrectas junto al formulario |
+| Inyección en observaciones | El texto `<script>…` se muestra literal y no se ejecuta |

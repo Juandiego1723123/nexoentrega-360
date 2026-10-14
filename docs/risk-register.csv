@@ -6,5 +6,5 @@ R-04,Salida de IA inválida o con datos ajenos,Media,Alto,David,JSON Schema del 
 R-05,Proveedor de IA caído o lento,Media,Medio,David,Timeout de 5 s y modo sin proveedor,AC-RF12-01 y AC-RNF06-01,Bajo
 R-06,Inyección de código en texto de IA,Baja,Alto,Juan Fernando,Validador rechaza contenido activo; React muestra texto plano,AC-RF11-03 y E2E-05,Bajo
 R-07,Auditoría alterada o incompleta,Baja,Alto,Jhonatan,Evento en la misma transacción; trigger de solo inserción; 405 en la API,AC-RF09-03 y AC-RF09-04,Bajo
-R-08,Arranque con Docker no medido antes de la entrega,Media,Medio,David,Medir docker compose up --build desde clon limpio,Pendiente de medición,Medio
+R-08,Arranque con Docker no verificado antes de la entrega,Media,Medio,David,docker compose up --build desde clon limpio,Medido: 62 s; reveló y corrigió el defecto D-04 del Dockerfile,Bajo
 R-09,Código reconstruido con IA el último día sin revisión de cada integrante,Alta,Alto,Todos,Revisión por PR de cada módulo y bitácora de IA,Revisión de convergencia 6.5,Medio

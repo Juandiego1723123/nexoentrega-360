@@ -62,5 +62,5 @@ Se revierte la aplicación, no los datos; no se promete revertir datos sin respa
 
 ## 9. Problemas conocidos
 
-- El arranque con Docker no se pudo cronometrar en el entorno donde se construyó el sistema (sin acceso a Docker Hub); se verificó la sintaxis con `docker compose config` y el arranque sin Docker desde un clon limpio.
+- Arranque con Docker medido el 14-oct-2026 en Windows con Docker Desktop: 62 s desde `docker compose up -d --build` hasta `/api/ready` = 200 (build de la imagen 11 s; imágenes base ya descargadas: 2 s).
 - Las pruebas E2E reinician la base de la aplicación (seed) antes de cada caso: no las ejecute contra datos que quiera conservar.
