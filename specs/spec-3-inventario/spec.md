@@ -76,5 +76,7 @@ Reserva atómica e idempotente de existencias, despacho y cancelación con inven
 | AC-RF07-03 | A-001 y A-002 piden 7 cada una con disponible 10 | se reservan en simultáneo (5 rondas, seed limpio) | exactamente una 200 y una 409; físico 10, reservado 7, disponible 3; un solo evento |
 | AC-RF07-03b | la misma clave K | se envía dos veces en simultáneo para A-001 | ambas responden 200 con un solo efecto y un solo evento |
 | AC-RF07-04 | A-001 ya RESERVADA | se reserva otra vez con otra clave | recibe 409 TRANSICION_INVALIDA porque ya no está ENVIADA |
-| AC-RF07-05 | el contrato de idempotencia | se reserva sin clave, con rol bodega (403) y sobre B-001 (404) | sin clave → 422; 403 y 404 no se guardan; la misma clave de otro usuario es una operación independiente; el TTL es de al menos 24 h |
+| AC-RF07-05 | el contrato de idempotencia | se intenta reservar sin clave | sin clave → 422; no se guarda la operación; el TTL es de al menos 24 h |
+| AC-RF07-06 | el contrato de idempotencia | se intenta reservar con rol bodega | 403 (prohibido) no se guarda; el TTL es de al menos 24 h |
+| AC-RF07-07 | el contrato de idempotencia | se intenta reservar sobre B-001 (otra organización) | 404 (no encontrado) no se guarda; la misma clave de otro usuario es una operación independiente; el TTL es de al menos 24 h |
 | AC-RNF02-01 | la base real | se intenta dejar existencias o reservas negativas o reservado > físico | las restricciones CHECK lo rechazan y ningún mínimo queda negativo |
