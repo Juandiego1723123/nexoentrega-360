@@ -11,4 +11,4 @@ Los valores explícitos del enunciado prevalecen. Las preguntas que requieren de
 | 5 | ¿Reintento automático si falla la IA? | RF12 | Esperas largas o costos | Sin reintento; el coordinador puede volver a pedir el resumen | Supuesto | David |
 | 6 | ¿Qué responde la API ante un recurso de otra organización? | RF02 | Revelar existencia | 404 | Resuelto por el enunciado | Jhonatan |
 | 7 | ¿Qué respuestas guarda la idempotencia? | RF07 | Reintentos que no se repiten o duplicados | 200 y 409 de negocio por 24 h; 401, 403, 404, 422 y 5xx no se guardan (RF07 deja la decisión al contrato) | Resuelto por el enunciado (decisión documentada en el contrato) | Jhonatan |
-| 8 | ¿Un solicitante puede ver la solicitud de otro de su organización? | RF02, RF08 | Fuga entre solicitantes | No: 403 | Supuesto | Andrés |
+| 8 | ¿Un solicitante puede ver la solicitud de otro de su organización? | RF02, RF08 | Fuga entre solicitantes | No: 403 | Supuesto: Se restringe el acceso cruzado; cada organización solo ve sus propias solicitudes. | Andrés |
