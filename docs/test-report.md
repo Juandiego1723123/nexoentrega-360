@@ -31,6 +31,8 @@ Los valores esperados vienen del anexo `acceptance-oracles.md` (por ejemplo, res
 | D-03 | En 390 px la celda incluye su etiqueta visual en el nombre accesible y la prueba buscaba el texto exacto | `tests/e2e/flujo-principal.spec.js` | Localizar por columna (`data-label`) | E2E-01 |
 | D-04 | El Dockerfile usaba `npm ci --omit=optional` y excluía `@rollup/rollup-linux-x64-gnu`; `vite build` fallaba dentro de la imagen | `Dockerfile` | `npm ci --ignore-scripts` sin omitir opcionales | `docker compose up -d --build` (62 s hasta ready) |
 | D-05 | Condición de carrera en el formulario: al llegar el catálogo se reemplazaban las líneas y se perdía la cantidad ya escrita (detectado por el CI en E2E-02, escritorio; intermitente) | `apps/web/src/Solicitudes.jsx` | Al cargar el catálogo solo se completa el SKU vacío; la prueba espera la opción de producto antes de escribir | E2E-02 |
+| D-06 | Al dividir AC-RF07-05 en 05, 06 y 07 se editó `spec.md` sin regenerar `spec.json` ni agregar las pruebas; el CI #10 lo detectó (`DIFERENCIA: spec-3 spec.json no coincide`) | `specs/spec-3-inventario/`, `tests/integration/spec3-inventario.test.js` | `spec.json` regenerado y prueba separada en tres (commit eb4467a) | AC-RF07-05, AC-RF07-06, AC-RF07-07 |
+| D-07 | Los supuestos 1, 3 y 8 del registro de aclaraciones se editaron de forma que contradecían SPEC-2 y el código (zona por dirección, visibilidad de inventario para solicitantes) | `docs/clarification-log.md` | Se restauraron los supuestos vigentes que cita SPEC-2 | Revisión manual contra SPEC-2 y `services/requests.js` |
 
 Ningún defecto se resolvió relajando una aserción.
 
