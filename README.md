@@ -36,7 +36,7 @@ Cuentas ficticias: `org-a-solicitante@example.test`, `org-a-coordinador@example.
 ## Verificación
 
 ```bash
-npm run check      # specs, contrato y trazabilidad (54 criterios → pruebas)
+npm run check      # specs, contrato y trazabilidad (56 criterios → pruebas)
 npm test           # 60 pruebas (TEST_DATABASE_URL)
 npm run test:e2e   # 10 pruebas E2E
 ```

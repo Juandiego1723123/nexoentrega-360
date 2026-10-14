@@ -157,8 +157,20 @@
     {
       "id": "AC-RF07-05",
       "given": "el contrato de idempotencia",
-      "when": "se reserva sin clave, con rol bodega (403) y sobre B-001 (404)",
-      "then": "sin clave → 422; 403 y 404 no se guardan; la misma clave de otro usuario es una operación independiente; el TTL es de al menos 24 h"
+      "when": "se intenta reservar sin clave",
+      "then": "sin clave → 422; no se guarda la operación; el TTL es de al menos 24 h"
+    },
+    {
+      "id": "AC-RF07-06",
+      "given": "el contrato de idempotencia",
+      "when": "se intenta reservar con rol bodega",
+      "then": "403 (prohibido) no se guarda; el TTL es de al menos 24 h"
+    },
+    {
+      "id": "AC-RF07-07",
+      "given": "el contrato de idempotencia",
+      "when": "se intenta reservar sobre B-001 (otra organización)",
+      "then": "404 (no encontrado) no se guarda; la misma clave de otro usuario es una operación independiente; el TTL es de al menos 24 h"
     },
     {
       "id": "AC-RNF02-01",

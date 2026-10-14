@@ -10,7 +10,7 @@ Requerimiento → Historia → SPEC → criterio → tarea → módulo → prueb
 | RF04 | HU-02 | SPEC-2 | AC-RF04-01, AC-RF04-02, AC-RF04-03, AC-RF04-04 | T-04 | apps/api/src/services/requests.js (TRANSITIONS) | tests/integration/spec2-solicitudes.test.js | 4/4 pasan |
 | RF05 | HU-03 | SPEC-3 | AC-RF05-01, AC-RF05-02, AC-RF05-03 | T-05 | apps/api/src/services/requests.js (reservar, bloquearInventario) | tests/integration/spec3-inventario.test.js | 3/3 pasan |
 | RF06 | HU-03 | SPEC-3 | AC-RF06-01, AC-RF06-02, AC-RF06-03 | T-06 | apps/api/src/services/requests.js (transicionConInventario) | tests/integration/spec3-inventario.test.js | 3/3 pasan |
-| RF07 | HU-03 | SPEC-3 | AC-RF07-01, AC-RF07-02, AC-RF07-03, AC-RF07-03b, AC-RF07-04, AC-RF07-05 | T-07 | apps/api/src/services/requests.js (reservar); tabla idempotency_keys | tests/integration/spec3-inventario.test.js | 6/6 pasan |
+| RF07 | HU-03 | SPEC-3 | AC-RF07-01, AC-RF07-02, AC-RF07-03, AC-RF07-03b, AC-RF07-04, AC-RF07-05, AC-RF07-06, AC-RF07-07 | T-07 | apps/api/src/services/requests.js (reservar); tabla idempotency_keys | tests/integration/spec3-inventario.test.js | 8/8 pasan |
 | RF08 | HU-04 | SPEC-4 | AC-RF08-01, AC-RF08-02, AC-RF08-03, AC-RF08-04, AC-RF08-05 | T-08 | apps/api/src/services/requests.js (listar, dashboard, inventario) | tests/integration/spec4-consultas.test.js | 5/5 pasan |
 | RF09 | HU-04 | SPEC-4 | AC-RF09-01, AC-RF09-02, AC-RF09-03, AC-RF09-04, AC-RF09-05 | T-09 | services/requests.js (audit, auditoria); trigger en migrations/001_init.sql | tests/integration/spec4-consultas.test.js | 5/5 pasan |
 | RF10 | HU-05 | SPEC-5 | AC-RF10-01, AC-RF10-02, AC-RF10-03, AC-RF10-04, AC-RF10-05 | T-10 | apps/api/src/services/ai.js (crearResumen) | tests/integration/spec5-ia.test.js | 5/5 pasan |

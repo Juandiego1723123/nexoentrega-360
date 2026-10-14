@@ -135,23 +135,43 @@ describe('SPEC-3 · Inventario y transiciones', () => {
     assert.deepEqual(await H.stock('ORG-A', 'KIT-ALIMENTO'), { fisico: 10, reservado: 7, disponible: 3 });
   });
 
-  test('AC-RF07-05 contrato de idempotencia: sin clave 422; 403 y 404 no se guardan; una clave no recupera la respuesta de otro usuario', async () => {
+  const ttlGuardado = async () => (await H.pool.query('SELECT expires_at - created_at AS ttl FROM idempotency_keys LIMIT 1')).rows[0].ttl;
+  const claves = async () => (await H.pool.query('SELECT count(*)::int n FROM idempotency_keys')).rows[0].n;
+
+  test('AC-RF07-05 reservar sin Idempotency-Key responde 422, no guarda la operación y el TTL de una clave es de al menos 24 h', async () => {
     const coord = await H.sesion(app.base, H.CUENTAS.coordA);
     const sinClave = await coord.post('/requests/A-001/reserve');
     assert.equal(sinClave.status, 422);
     assert.equal(sinClave.body.error.field, 'Idempotency-Key');
+    assert.equal(await claves(), 0);
+    assert.equal((await reservar(coord, 'A-001')).status, 200);
+    const ttl = await ttlGuardado();
+    assert.ok(ttl.hours >= 24 || ttl.days >= 1);
+  });
+
+  test('AC-RF07-06 reservar con rol bodega responde 403 y no se guarda; la clave sigue libre', async () => {
     const key = H.uuid();
     const bod = await H.sesion(app.base, H.CUENTAS.bodA);
     assert.equal((await reservar(bod, 'A-001', key)).status, 403);
+    assert.equal(await claves(), 0);
+    const coord = await H.sesion(app.base, H.CUENTAS.coordA);
+    assert.equal((await reservar(coord, 'A-001', key)).status, 200);
+    const ttl = await ttlGuardado();
+    assert.ok(ttl.hours >= 24 || ttl.days >= 1);
+  });
+
+  test('AC-RF07-07 reservar B-001 desde otra organización responde 404 y no se guarda; la misma clave de otro usuario es independiente', async () => {
+    const key = H.uuid();
+    const coord = await H.sesion(app.base, H.CUENTAS.coordA);
     assert.equal((await reservar(coord, 'B-001', key)).status, 404);
-    assert.equal((await H.pool.query('SELECT count(*)::int n FROM idempotency_keys')).rows[0].n, 0);
+    assert.equal(await claves(), 0);
     assert.equal((await reservar(coord, 'A-001', key)).status, 200);
     const coordB = await H.sesion(app.base, H.CUENTAS.coordB);
     const otra = await reservar(coordB, 'B-001', key); // misma clave, otro usuario: operación independiente
     assert.equal(otra.status, 200);
     assert.equal(otra.body.codigo, 'B-001');
-    const guardada = (await H.pool.query('SELECT expires_at - created_at AS ttl FROM idempotency_keys LIMIT 1')).rows[0].ttl;
-    assert.ok(guardada.hours >= 24 || guardada.days >= 1);
+    const ttl = await ttlGuardado();
+    assert.ok(ttl.hours >= 24 || ttl.days >= 1);
   });
 
   test('AC-RNF02-01 consistencia: la base rechaza existencias o reservas negativas y ninguna prueba las deja', async () => {

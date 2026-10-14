@@ -13,8 +13,8 @@
 
 | Comando | Resultado | Evidencia |
 |---|---|---|
-| `npm run check` | 5 spec.json coinciden; 24 operaciones del contrato = rutas; 54 criterios con prueba | salida de CI |
-| `npm test` | 60 de 60 pasan (12 unitarias y 48 de integración contra PostgreSQL real, en 5 suites); ≈ 78 s | `evidence/tests/pruebas-unitarias-integracion.txt` |
+| `npm run check` | 5 spec.json coinciden; 24 operaciones del contrato = rutas; 56 criterios con prueba | salida de CI |
+| `npm test` | 62 de 62 pasan (12 unitarias y 50 de integración contra PostgreSQL real, en 5 suites); ≈ 74 s | `evidence/tests/pruebas-unitarias-integracion.txt` |
 | `npm run test:e2e` | 10 de 10 pasan (5 escenarios en 1366 y 390 px) | `evidence/tests/pruebas-e2e.txt`, `evidence/tests/e2e-results.json`, `evidence/screenshots/` (20 capturas) |
 | `k6 run tests/load/listados.k6.js` | Fase de medición (60 s, 20 VU, tras 5 s): p95 52,4 ms; 0 % errores; 36.724 peticiones | `evidence/tests/k6-output.txt`, `evidence/tests/k6-summary.json` |
 
