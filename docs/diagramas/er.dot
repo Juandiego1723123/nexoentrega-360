@@ -1,0 +1,28 @@
+digraph ER {
+graph [rankdir=LR, fontname="DejaVu Sans", nodesep=0.35, ranksep=0.9, pad=0.2];
+node [shape=plaintext, fontname="DejaVu Sans", fontsize=12];
+edge [color="#404040", arrowhead=crow, penwidth=1.2];
+ai_summaries [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>ai_summaries</b></font></td></tr><tr><td align="left">id PK</td></tr><tr><td align="left">org_id FK</td></tr><tr><td align="left">coordinator_id FK</td></tr><tr><td align="left">request_ids</td></tr><tr><td align="left">origen CHECK (IA, DETERMINISTA)</td></tr><tr><td align="left">motivo_fallo</td></tr><tr><td align="left">summary</td></tr><tr><td align="left">recommendations</td></tr><tr><td align="left">estado CHECK (BORRADOR, APROBADO)</td></tr><tr><td align="left">created_at</td></tr><tr><td align="left">approved_at</td></tr><tr><td align="left">approved_by</td></tr></table>>];
+audit_events [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>audit_events</b></font></td></tr><tr><td align="left">id PK</td></tr><tr><td align="left">actor_id FK</td></tr><tr><td align="left">organization_id FK</td></tr><tr><td align="left">recurso</td></tr><tr><td align="left">recurso_id</td></tr><tr><td align="left">accion</td></tr><tr><td align="left">fecha_utc</td></tr><tr><td align="left">correlation_id</td></tr><tr><td align="left"><i>trigger: solo inserción</i></td></tr></table>>];
+idempotency_keys [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>idempotency_keys</b></font></td></tr><tr><td align="left">PK (idem_key, user_id, operation)</td></tr><tr><td align="left">user_id FK</td></tr><tr><td align="left">request_hash</td></tr><tr><td align="left">status_code</td></tr><tr><td align="left">response_body</td></tr><tr><td align="left">created_at</td></tr><tr><td align="left">expires_at</td></tr><tr><td align="left"><i>expira a las 24 h</i></td></tr></table>>];
+inventory [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>inventory</b></font></td></tr><tr><td align="left">product_id PK/FK</td></tr><tr><td align="left">on_hand CHECK ≥ 0</td></tr><tr><td align="left">reserved CHECK ≥ 0 y ≤ on_hand</td></tr></table>>];
+organizations [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>organizations</b></font></td></tr><tr><td align="left">id PK</td></tr><tr><td align="left">name</td></tr><tr><td align="left">code_prefix</td></tr><tr><td align="left">next_request_number</td></tr></table>>];
+products [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>products</b></font></td></tr><tr><td align="left">id PK</td></tr><tr><td align="left">org_id FK</td></tr><tr><td align="left">sku</td></tr><tr><td align="left">name</td></tr><tr><td align="left">active</td></tr><tr><td align="left"><i>UNIQUE (org_id, sku)</i></td></tr></table>>];
+request_lines [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>request_lines</b></font></td></tr><tr><td align="left">request_code PK/FK</td></tr><tr><td align="left">product_id PK/FK</td></tr><tr><td align="left">cantidad CHECK 1–500</td></tr></table>>];
+requests [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>requests</b></font></td></tr><tr><td align="left">code PK (A-001)</td></tr><tr><td align="left">org_id FK</td></tr><tr><td align="left">requester_id FK</td></tr><tr><td align="left">zona</td></tr><tr><td align="left">prioridad</td></tr><tr><td align="left">fecha_requerida</td></tr><tr><td align="left">observaciones ≤ 500</td></tr><tr><td align="left">estado CHECK (6 estados)</td></tr><tr><td align="left">created_at</td></tr><tr><td align="left">updated_at</td></tr><tr><td align="left">submitted_at</td></tr></table>>];
+sessions [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>sessions</b></font></td></tr><tr><td align="left">token_hash PK (SHA-256)</td></tr><tr><td align="left">user_id FK</td></tr><tr><td align="left">created_at</td></tr><tr><td align="left">expires_at</td></tr></table>>];
+users [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#1A1A1A"><font color="white"><b>users</b></font></td></tr><tr><td align="left">id PK</td></tr><tr><td align="left">org_id FK</td></tr><tr><td align="left">email UNIQUE</td></tr><tr><td align="left">name</td></tr><tr><td align="left">role CHECK (4 roles)</td></tr><tr><td align="left">password_hash (bcrypt)</td></tr></table>>];
+organizations -> ai_summaries;
+users -> ai_summaries;
+organizations -> audit_events;
+users -> audit_events;
+users -> idempotency_keys;
+products -> inventory;
+organizations -> products;
+products -> request_lines;
+requests -> request_lines;
+organizations -> requests;
+users -> requests;
+users -> sessions;
+organizations -> users;
+}

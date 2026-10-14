@@ -1,0 +1,33 @@
+digraph G {
+  graph [rankdir=TB, fontname="DejaVu Sans", fontsize=13, nodesep=0.5, ranksep=0.55, pad=0.2, compound=true];
+  node  [fontname="DejaVu Sans", fontsize=13, shape=box, style="rounded,filled", fillcolor="#F2F2F2", color="#1A1A1A", penwidth=1.2];
+  edge  [fontname="DejaVu Sans", fontsize=11, color="#404040", penwidth=1.1, arrowsize=0.8];
+
+  subgraph cluster_ext {
+    label="Zona no confiable: navegador del usuario"; labeljust=l; style="dashed"; color="#7F7F7F"; fontcolor="#404040";
+    roles [shape=ellipse, fillcolor="white", label="Solicitante · Coordinador · Bodega · Auditor\n(ORG-A y ORG-B)"];
+    web [label="Interfaz web React\n(se ejecuta en el navegador)"];
+  }
+
+  subgraph cluster_sys {
+    label="Zona confiable: servidor de NexoEntrega 360"; labeljust=l; style="bold"; color="#1A1A1A"; fontcolor="#1A1A1A";
+    api [fillcolor="#E0E0E0", label="API HTTP\nsesión · rol y organización desde la sesión\nvalidación · transacciones · idempotencia · auditoría"];
+    db  [shape=cylinder, label="PostgreSQL\nCHECK · claves foráneas\ntrigger de solo inserción en auditoría"];
+    ad  [label="Adaptador de IA\nminimiza datos · timeout 5 s\nJSON Schema · resumen determinista"];
+  }
+
+  subgraph cluster_ia {
+    label="Zona no confiable: proveedor de IA"; labeljust=l; style="dashed"; color="#7F7F7F"; fontcolor="#404040";
+    llm [style="rounded,dashed", fillcolor="white", label="Modelo local Ollama (llama3.2)\no proveedor de fixtures en CI"];
+  }
+
+  ci [shape=box, style="rounded,dashed", fillcolor="white", label="GitHub Actions\nCI sin servicios de pago"];
+
+  roles -> web [label="uso"];
+  web -> api [label="  F1  JSON + cookie HttpOnly"];
+  api -> db  [label="  F4  SQL en transacción"];
+  api -> ad  [label="  invocación interna"];
+  ad -> llm  [label="  F2  solo campos permitidos"];
+  llm -> ad  [style=dashed, label="  F3  salida no confiable"];
+  ci -> api  [style=dashed, label="  pruebas contra base real"];
+}
