@@ -51,6 +51,9 @@ Reserva atómica e idempotente de existencias, despacho y cancelación con inven
 - Un error antes del commit no deja reserva parcial.
 - La idempotencia guarda 200 y 409 de negocio al menos 24 h; 401, 403, 404, 422 y 5xx no se guardan (supuesto 7).
 - Una clave no recupera la respuesta de otro usuario (la clave primaria incluye el usuario).
+- La clave no incluye una columna de organización porque cada usuario pertenece a una sola organización: (clave, usuario, operación) equivale a (clave, usuario, organización, operación) de RF07.
+- Tras un 409 de negocio (stock insuficiente o estado inválido) la respuesta queda guardada 24 h con su clave; para reintentar cuando cambie el inventario se usa una clave nueva (la interfaz genera una por cada clic).
+- Si fallan varias condiciones, se responde en este orden: 401 (sin sesión) → 404 (recurso inexistente o de otra organización) → 403 (rol) → 422 (Idempotency-Key ausente o inválida) → 409 (estado o stock).
 
 ## Casos límite
 

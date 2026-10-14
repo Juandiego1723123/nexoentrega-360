@@ -22,7 +22,7 @@ components:
       name: Idempotency-Key
       in: header
       required: true
-      description: UUID. Se procesa después de autenticar y autorizar. Se guardan las respuestas 200 y 409 de negocio durante 24 h; 401, 403, 404, 422 y 5xx no se guardan y pueden reintentarse.
+      description: UUID. Se procesa después de autenticar y autorizar. Se guardan las respuestas 200 y 409 de negocio durante 24 h; 401, 403, 404, 422 y 5xx no se guardan y pueden reintentarse. Tras un 409 de negocio, reintente con una clave nueva. Orden de validación 401, 404, 403, 422 y 409.
       schema: { type: string, format: uuid }
     CorrelationId: { name: X-Correlation-Id, in: header, required: false, schema: { type: string } }
   responses:
