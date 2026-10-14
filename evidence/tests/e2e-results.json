@@ -1,0 +1,443 @@
+{
+  "config": {
+    "configFile": "/home/claude/nexoentrega-360/tests/e2e/playwright.config.js",
+    "rootDir": "/home/claude/nexoentrega-360/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../../evidence/tests/e2e-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/claude/nexoentrega-360/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "escritorio-1366",
+        "name": "escritorio-1366",
+        "testDir": "/home/claude/nexoentrega-360/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.js/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/home/claude/nexoentrega-360/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "movil-390",
+        "name": "movil-390",
+        "testDir": "/home/claude/nexoentrega-360/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.spec\\.js/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "node apps/api/src/server.js",
+      "cwd": "../..",
+      "url": "http://localhost:3000/api/ready",
+      "reuseExistingServer": true,
+      "env": {
+        "LOG_SILENT": "true",
+        "AI_PROVIDER": "none"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "flujo-principal.spec.js",
+      "file": "flujo-principal.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "E2E-01 recorrido principal: crear → enviar → reservar → despachar → entregar → auditoría",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "escritorio-1366",
+              "projectName": "escritorio-1366",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3664,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:46.929Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-94087a55a9c49273f1f5",
+          "file": "flujo-principal.spec.js",
+          "line": 37,
+          "column": 1
+        },
+        {
+          "title": "E2E-02 errores asociados a su campo: credenciales y cantidad inválida",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "escritorio-1366",
+              "projectName": "escritorio-1366",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 988,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:50.730Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-566b02771ef31fa996dd",
+          "file": "flujo-principal.spec.js",
+          "line": 90,
+          "column": 1
+        },
+        {
+          "title": "E2E-03 inicio de sesión y navegación solo con teclado",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "escritorio-1366",
+              "projectName": "escritorio-1366",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 966,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:51.739Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-bceb602cd590f2bbc8fa",
+          "file": "flujo-principal.spec.js",
+          "line": 113,
+          "column": 1
+        },
+        {
+          "title": "E2E-04 aislamiento en la interfaz: ORG-B no ve datos de ORG-A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "escritorio-1366",
+              "projectName": "escritorio-1366",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 644,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:52.720Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-8c8cfb0c9e5a4b970573",
+          "file": "flujo-principal.spec.js",
+          "line": 136,
+          "column": 1
+        },
+        {
+          "title": "E2E-05 asistente de IA: borrador marcado, aviso de degradación y aprobación humana",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "escritorio-1366",
+              "projectName": "escritorio-1366",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1106,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:53.381Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-cf4592a35561083268d3",
+          "file": "flujo-principal.spec.js",
+          "line": 146,
+          "column": 1
+        },
+        {
+          "title": "E2E-01 recorrido principal: crear → enviar → reservar → despachar → entregar → auditoría",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movil-390",
+              "projectName": "movil-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3506,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:55.454Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-62bbbd9476e6ab77f820",
+          "file": "flujo-principal.spec.js",
+          "line": 37,
+          "column": 1
+        },
+        {
+          "title": "E2E-02 errores asociados a su campo: credenciales y cantidad inválida",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movil-390",
+              "projectName": "movil-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1011,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:22:59.076Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-09a874a4a60127056f3d",
+          "file": "flujo-principal.spec.js",
+          "line": 90,
+          "column": 1
+        },
+        {
+          "title": "E2E-03 inicio de sesión y navegación solo con teclado",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movil-390",
+              "projectName": "movil-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 995,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:23:00.109Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-26f9335825aa96e0da8c",
+          "file": "flujo-principal.spec.js",
+          "line": 113,
+          "column": 1
+        },
+        {
+          "title": "E2E-04 aislamiento en la interfaz: ORG-B no ve datos de ORG-A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movil-390",
+              "projectName": "movil-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 567,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:23:01.125Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-2f4cc484497bf3300682",
+          "file": "flujo-principal.spec.js",
+          "line": 136,
+          "column": 1
+        },
+        {
+          "title": "E2E-05 asistente de IA: borrador marcado, aviso de degradación y aprobación humana",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "movil-390",
+              "projectName": "movil-390",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1078,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-14T11:23:01.708Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dae23fb74f1eed20dace-ebc283746232ff4a53b2",
+          "file": "flujo-principal.spec.js",
+          "line": 146,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-14T11:22:45.621Z",
+    "duration": 17270.4,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

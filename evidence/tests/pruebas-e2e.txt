@@ -1,0 +1,15 @@
+
+Running 10 tests using 1 worker
+
+  ✓   1 [escritorio-1366] › tests/e2e/flujo-principal.spec.js:37:1 › E2E-01 recorrido principal: crear → enviar → reservar → despachar → entregar → auditoría (3.7s)
+  ✓   2 [escritorio-1366] › tests/e2e/flujo-principal.spec.js:90:1 › E2E-02 errores asociados a su campo: credenciales y cantidad inválida (988ms)
+  ✓   3 [escritorio-1366] › tests/e2e/flujo-principal.spec.js:113:1 › E2E-03 inicio de sesión y navegación solo con teclado (966ms)
+  ✓   4 [escritorio-1366] › tests/e2e/flujo-principal.spec.js:136:1 › E2E-04 aislamiento en la interfaz: ORG-B no ve datos de ORG-A (644ms)
+  ✓   5 [escritorio-1366] › tests/e2e/flujo-principal.spec.js:146:1 › E2E-05 asistente de IA: borrador marcado, aviso de degradación y aprobación humana (1.1s)
+  ✓   6 [movil-390] › tests/e2e/flujo-principal.spec.js:37:1 › E2E-01 recorrido principal: crear → enviar → reservar → despachar → entregar → auditoría (3.5s)
+  ✓   7 [movil-390] › tests/e2e/flujo-principal.spec.js:90:1 › E2E-02 errores asociados a su campo: credenciales y cantidad inválida (1.0s)
+  ✓   8 [movil-390] › tests/e2e/flujo-principal.spec.js:113:1 › E2E-03 inicio de sesión y navegación solo con teclado (995ms)
+  ✓   9 [movil-390] › tests/e2e/flujo-principal.spec.js:136:1 › E2E-04 aislamiento en la interfaz: ORG-B no ve datos de ORG-A (567ms)
+  ✓  10 [movil-390] › tests/e2e/flujo-principal.spec.js:146:1 › E2E-05 asistente de IA: borrador marcado, aviso de degradación y aprobación humana (1.1s)
+
+  10 passed (17.3s)

@@ -1,0 +1,33 @@
+# Reporte de pruebas
+
+## Entorno de ejecución
+
+| Dato | Valor |
+|---|---|
+| Hardware | Linux, 2 vCPU Intel Xeon @ 2.80 GHz, 7 GB RAM |
+| Software | Node.js 22.22.0; PostgreSQL 16.15; Chromium de Playwright 1.56.1; k6 0.54.0 |
+| Fecha | 14 de octubre de 2026 |
+| Datos | Seed del anexo (`seeds/seed-data.json`) reiniciado antes de cada escenario; carga con 2.000 solicitudes (`npm run seed:load`) |
+
+## Comandos y resultados
+
+| Comando | Resultado | Evidencia |
+|---|---|---|
+| `npm run check` | 5 spec.json coinciden; 24 operaciones del contrato = rutas; 54 criterios con prueba | salida de CI |
+| `npm test` | 60 de 60 pasan (12 unitarias y 48 de integración contra PostgreSQL real, en 5 suites); ≈ 78 s | `evidence/tests/pruebas-unitarias-integracion.txt` |
+| `npm run test:e2e` | 10 de 10 pasan (5 escenarios en 1366 y 390 px) | `evidence/tests/pruebas-e2e.txt`, `evidence/tests/e2e-results.json`, `evidence/screenshots/` (20 capturas) |
+| `k6 run tests/load/listados.k6.js` | Fase de medición (60 s, 20 VU, tras 5 s): p95 52,4 ms; 0 % errores; 36.724 peticiones | `evidence/tests/k6-output.txt`, `evidence/tests/k6-summary.json` |
+
+## Oráculos
+
+Los valores esperados vienen del anexo `acceptance-oracles.md` (por ejemplo, reservar A-001 deja físico 10, reservado 7, disponible 3) y se comprueban con consultas directas a la base, no con la respuesta de la API.
+
+## Defectos encontrados durante la construcción
+
+| # | Defecto | Dónde | Corrección | Regresión |
+|---|---|---|---|---|
+| D-01 | La prueba de rutas sin sesión enviaba cuerpo en peticiones GET | `tests/integration/spec1-identidad.test.js` | Cuerpo solo en métodos que lo admiten | AC-RNF01-01 |
+| D-02 | La prueba de teclado presionaba Tab antes de que el formulario cargara | `tests/e2e/flujo-principal.spec.js` | Esperar el campo Correo visible antes de Tab | E2E-03 |
+| D-03 | En 390 px la celda incluye su etiqueta visual en el nombre accesible y la prueba buscaba el texto exacto | `tests/e2e/flujo-principal.spec.js` | Localizar por columna (`data-label`) | E2E-01 |
+
+Ningún defecto se resolvió relajando una aserción.
