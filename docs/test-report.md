@@ -30,6 +30,7 @@ Los valores esperados vienen del anexo `acceptance-oracles.md` (por ejemplo, res
 | D-02 | La prueba de teclado presionaba Tab antes de que el formulario cargara | `tests/e2e/flujo-principal.spec.js` | Esperar el campo Correo visible antes de Tab | E2E-03 |
 | D-03 | En 390 px la celda incluye su etiqueta visual en el nombre accesible y la prueba buscaba el texto exacto | `tests/e2e/flujo-principal.spec.js` | Localizar por columna (`data-label`) | E2E-01 |
 | D-04 | El Dockerfile usaba `npm ci --omit=optional` y excluía `@rollup/rollup-linux-x64-gnu`; `vite build` fallaba dentro de la imagen | `Dockerfile` | `npm ci --ignore-scripts` sin omitir opcionales | `docker compose up -d --build` (62 s hasta ready) |
+| D-05 | Condición de carrera en el formulario: al llegar el catálogo se reemplazaban las líneas y se perdía la cantidad ya escrita (detectado por el CI en E2E-02, escritorio; intermitente) | `apps/web/src/Solicitudes.jsx` | Al cargar el catálogo solo se completa el SKU vacío; la prueba espera la opción de producto antes de escribir | E2E-02 |
 
 Ningún defecto se resolvió relajando una aserción.
 

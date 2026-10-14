@@ -97,6 +97,7 @@ test('E2E-02 errores asociados a su campo: credenciales y cantidad inválida', a
   await page.getByLabel('Contraseña').fill(PASS);
   await page.getByRole('button', { name: 'Iniciar sesión' }).click();
   await page.getByRole('button', { name: 'Nueva solicitud' }).click();
+  await expect(page.locator('#sku-0 option').first()).toBeAttached(); // catálogo cargado
   await page.getByLabel('Fecha requerida').fill('2030-02-01T10:00');
   await page.getByLabel('Cantidad').fill('0');
   await page.getByRole('button', { name: 'Guardar y enviar' }).click();

@@ -104,12 +104,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3664,
+                  "duration": 3833,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:46.929Z",
+                  "startTime": "2026-10-14T12:13:08.172Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -138,12 +138,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 988,
+                  "duration": 1171,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:50.730Z",
+                  "startTime": "2026-10-14T12:13:12.116Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -172,12 +172,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 966,
+                  "duration": 974,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:51.739Z",
+                  "startTime": "2026-10-14T12:13:13.308Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -187,7 +187,7 @@
           ],
           "id": "dae23fb74f1eed20dace-bceb602cd590f2bbc8fa",
           "file": "flujo-principal.spec.js",
-          "line": 113,
+          "line": 114,
           "column": 1
         },
         {
@@ -206,12 +206,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 644,
+                  "duration": 564,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:52.720Z",
+                  "startTime": "2026-10-14T12:13:14.301Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -221,7 +221,7 @@
           ],
           "id": "dae23fb74f1eed20dace-8c8cfb0c9e5a4b970573",
           "file": "flujo-principal.spec.js",
-          "line": 136,
+          "line": 137,
           "column": 1
         },
         {
@@ -240,12 +240,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1106,
+                  "duration": 1169,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:53.381Z",
+                  "startTime": "2026-10-14T12:13:14.884Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -255,7 +255,7 @@
           ],
           "id": "dae23fb74f1eed20dace-cf4592a35561083268d3",
           "file": "flujo-principal.spec.js",
-          "line": 146,
+          "line": 147,
           "column": 1
         },
         {
@@ -274,12 +274,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3506,
+                  "duration": 3541,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:55.454Z",
+                  "startTime": "2026-10-14T12:13:16.948Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -308,12 +308,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1011,
+                  "duration": 834,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:22:59.076Z",
+                  "startTime": "2026-10-14T12:13:20.604Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -342,12 +342,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 995,
+                  "duration": 968,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:23:00.109Z",
+                  "startTime": "2026-10-14T12:13:21.455Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -357,7 +357,7 @@
           ],
           "id": "dae23fb74f1eed20dace-26f9335825aa96e0da8c",
           "file": "flujo-principal.spec.js",
-          "line": 113,
+          "line": 114,
           "column": 1
         },
         {
@@ -376,12 +376,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 567,
+                  "duration": 590,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:23:01.125Z",
+                  "startTime": "2026-10-14T12:13:22.443Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -391,7 +391,7 @@
           ],
           "id": "dae23fb74f1eed20dace-2f4cc484497bf3300682",
           "file": "flujo-principal.spec.js",
-          "line": 136,
+          "line": 137,
           "column": 1
         },
         {
@@ -410,12 +410,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1078,
+                  "duration": 1038,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T11:23:01.708Z",
+                  "startTime": "2026-10-14T12:13:23.051Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -425,7 +425,7 @@
           ],
           "id": "dae23fb74f1eed20dace-ebc283746232ff4a53b2",
           "file": "flujo-principal.spec.js",
-          "line": 146,
+          "line": 147,
           "column": 1
         }
       ]
@@ -433,8 +433,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-14T11:22:45.621Z",
-    "duration": 17270.4,
+    "startTime": "2026-10-14T12:13:06.885Z",
+    "duration": 17331.784,
     "expected": 10,
     "skipped": 0,
     "unexpected": 0,

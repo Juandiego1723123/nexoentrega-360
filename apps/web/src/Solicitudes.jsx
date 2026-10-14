@@ -136,7 +136,8 @@ export function FormSolicitud({ codigo, onListo }) {
   useEffect(() => {
     api('GET', '/catalog').then((c) => {
       setCatalogo(c.items);
-      if (!codigo) setF((x) => ({ ...x, lineas: [{ sku: c.items[0]?.sku || '', cantidad: '1' }] }));
+      // Solo completa el SKU vacío: no pisa lo que el usuario ya escribió mientras cargaba el catálogo (D-05)
+      if (!codigo) setF((x) => ({ ...x, lineas: x.lineas.map((l) => (l.sku ? l : { ...l, sku: c.items[0]?.sku || '' })) }));
     });
     if (codigo) {
       api('GET', `/requests/${codigo}`).then((s) => setF({
