@@ -1,0 +1,30 @@
+{
+  "name": "nexoentrega-360",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NexoEntrega 360 · distribución comunitaria de kits (Examen SDD con IA, equipo VEYRON)",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "npm run build --workspace apps/web",
+    "migrate": "node apps/api/scripts/migrate.js",
+    "seed": "node apps/api/scripts/seed.js",
+    "seed:load": "node apps/api/scripts/seed-load.js",
+    "start": "node apps/api/src/server.js",
+    "dev:web": "npm run dev --workspace apps/web",
+    "test": "node --test --test-concurrency=1 \"tests/unit/*.test.js\" \"tests/integration/*.test.js\"",
+    "test:e2e": "playwright test -c tests/e2e/playwright.config.js",
+    "contract:check": "node scripts/contract-check.js",
+    "specs:check": "python3 scripts/export_specs.py --check",
+    "trace:check": "node scripts/trace-check.js",
+    "check": "npm run specs:check && npm run contract:check && npm run trace:check"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

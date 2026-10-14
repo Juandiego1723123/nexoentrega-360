@@ -1,0 +1,171 @@
+{
+  "source": "Anexo del examen: fixture-scenarios.json (scenario-facts-v1). Credenciales ficticias; la contraseña sale de SEED_PASSWORD.",
+  "organizations": [
+    {
+      "id": "ORG-A",
+      "name": "Organización comunitaria A",
+      "codePrefix": "A"
+    },
+    {
+      "id": "ORG-B",
+      "name": "Organización comunitaria B",
+      "codePrefix": "B"
+    }
+  ],
+  "products": [
+    {
+      "organizationId": "ORG-A",
+      "sku": "KIT-ALIMENTO",
+      "name": "Kit de alimentos",
+      "active": true,
+      "onHand": 10,
+      "reserved": 0
+    },
+    {
+      "organizationId": "ORG-A",
+      "sku": "KIT-HIGIENE",
+      "name": "Kit de higiene",
+      "active": true,
+      "onHand": 8,
+      "reserved": 0
+    },
+    {
+      "organizationId": "ORG-A",
+      "sku": "KIT-AGUA",
+      "name": "Kit de agua potable",
+      "active": true,
+      "onHand": 20,
+      "reserved": 0
+    },
+    {
+      "organizationId": "ORG-B",
+      "sku": "KIT-ALIMENTO",
+      "name": "Kit de alimentos",
+      "active": true,
+      "onHand": 4,
+      "reserved": 0
+    },
+    {
+      "organizationId": "ORG-B",
+      "sku": "KIT-HIGIENE",
+      "name": "Kit de higiene",
+      "active": true,
+      "onHand": 5,
+      "reserved": 0
+    },
+    {
+      "organizationId": "ORG-B",
+      "sku": "KIT-AGUA",
+      "name": "Kit de agua potable",
+      "active": true,
+      "onHand": 6,
+      "reserved": 0
+    }
+  ],
+  "accounts": [
+    {
+      "organizationId": "ORG-A",
+      "role": "SOLICITANTE",
+      "email": "org-a-solicitante@example.test",
+      "name": "Solicitante ORG-A"
+    },
+    {
+      "organizationId": "ORG-A",
+      "role": "COORDINADOR",
+      "email": "org-a-coordinador@example.test",
+      "name": "Coordinador ORG-A"
+    },
+    {
+      "organizationId": "ORG-A",
+      "role": "BODEGA",
+      "email": "org-a-bodega@example.test",
+      "name": "Bodega ORG-A"
+    },
+    {
+      "organizationId": "ORG-A",
+      "role": "AUDITOR",
+      "email": "org-a-auditor@example.test",
+      "name": "Auditor ORG-A"
+    },
+    {
+      "organizationId": "ORG-B",
+      "role": "SOLICITANTE",
+      "email": "org-b-solicitante@example.test",
+      "name": "Solicitante ORG-B"
+    },
+    {
+      "organizationId": "ORG-B",
+      "role": "COORDINADOR",
+      "email": "org-b-coordinador@example.test",
+      "name": "Coordinador ORG-B"
+    },
+    {
+      "organizationId": "ORG-B",
+      "role": "BODEGA",
+      "email": "org-b-bodega@example.test",
+      "name": "Bodega ORG-B"
+    },
+    {
+      "organizationId": "ORG-B",
+      "role": "AUDITOR",
+      "email": "org-b-auditor@example.test",
+      "name": "Auditor ORG-B"
+    },
+    {
+      "organizationId": "ORG-A",
+      "role": "SOLICITANTE",
+      "email": "org-a-solicitante2@example.test",
+      "name": "Solicitante 2 ORG-A"
+    }
+  ],
+  "requests": [
+    {
+      "code": "A-001",
+      "organizationId": "ORG-A",
+      "ownerEmail": "org-a-solicitante@example.test",
+      "estado": "ENVIADA",
+      "zona": "NORTE",
+      "prioridad": "ALTA",
+      "fechaRequerida": "2030-01-11T14:00:00Z",
+      "observaciones": "Entrega comunitaria programada.",
+      "lines": [
+        {
+          "sku": "KIT-ALIMENTO",
+          "cantidad": 7
+        }
+      ]
+    },
+    {
+      "code": "A-002",
+      "organizationId": "ORG-A",
+      "ownerEmail": "org-a-solicitante@example.test",
+      "estado": "ENVIADA",
+      "zona": "SUR",
+      "prioridad": "NORMAL",
+      "fechaRequerida": "2030-01-12T14:00:00Z",
+      "observaciones": "Solicitud pendiente.",
+      "lines": [
+        {
+          "sku": "KIT-ALIMENTO",
+          "cantidad": 7
+        }
+      ]
+    },
+    {
+      "code": "B-001",
+      "organizationId": "ORG-B",
+      "ownerEmail": "org-b-solicitante@example.test",
+      "estado": "ENVIADA",
+      "zona": "CENTRO",
+      "prioridad": "ALTA",
+      "fechaRequerida": "2030-01-11T15:00:00Z",
+      "observaciones": "Dato exclusivo de ORG-B.",
+      "lines": [
+        {
+          "sku": "KIT-HIGIENE",
+          "cantidad": 2
+        }
+      ]
+    }
+  ]
+}
