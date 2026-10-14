@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
-RUN npm ci --omit=optional --ignore-scripts
+RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build
 ENV NODE_ENV=production PORT=3000
