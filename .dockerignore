@@ -1,0 +1,7 @@
+node_modules
+apps/web/dist
+.env
+.git
+test-results
+playwright-report
+evidence
